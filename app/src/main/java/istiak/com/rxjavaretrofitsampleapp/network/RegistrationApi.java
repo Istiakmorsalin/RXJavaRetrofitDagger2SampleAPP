@@ -6,6 +6,7 @@ package istiak.com.rxjavaretrofitsampleapp.network;
 
 
 
+import dagger.Component;
 import istiak.com.rxjavaretrofitsampleapp.model.User;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -16,7 +17,7 @@ import rx.Observable;
 
 public interface RegistrationApi {
 
-    @POST("/v1/snapToRoads")
-    Observable<User> registration(Body User);
+    @POST("users")
+    Observable<User> doRegistration(@Body User user) ;
 
 }
