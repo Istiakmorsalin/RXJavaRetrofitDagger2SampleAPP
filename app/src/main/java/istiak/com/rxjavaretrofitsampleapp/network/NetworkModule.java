@@ -18,12 +18,11 @@ import rx.schedulers.Schedulers;
 @Module
 public class NetworkModule {
 
-    private static final String BASE_URL= " ";
+    private static final String BASE_URL= "http://192.168.1.23:8080/api/";
 
     @Provides
     @Singleton
     public HttpLoggingInterceptor providesHttpLoggingInterceptor() {
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -39,7 +38,7 @@ public class NetworkModule {
         return httpClient.build();
     }
 
-    @Provides @Singleton @Named("serverAPI")
+    @Provides @Singleton
     public Retrofit providesServerApiRetrofit(OkHttpClient httpClient) {
 
         return new Retrofit.Builder().baseUrl(BASE_URL)
@@ -49,7 +48,7 @@ public class NetworkModule {
                 .build();
     }
 
-    @Provides @Singleton public RegistrationApi providesRegistrationApi(@Named("RegistrationApi") Retrofit retrofit) {
+    @Provides @Singleton public RegistrationApi providesRegistrationApi(Retrofit retrofit) {
         return retrofit.create(RegistrationApi.class);
     }
 
