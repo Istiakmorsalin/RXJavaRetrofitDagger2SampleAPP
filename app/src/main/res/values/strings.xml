@@ -13,4 +13,16 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="Blood_prompt">Choose a BloodGroup</string>
+    <string-array name="Blood_arrays">
+        <item>A Positive</item>
+        <item>B Positive</item>
+        <item>O Positive</item>
+        <item>AB Positive</item>
+        <item>A Negative</item>
+        <item>B Negative</item>
+        <item>O Negative</item>
+        <item>AB Negative</item>
+    </string-array>
 </resources>
