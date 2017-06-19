@@ -49,32 +49,26 @@ public class RegistrationPresenter {
         Observable<User> call = mRegistrationApi.doRegistration(user);
         Subscription subscription = call
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<User>() {
-                    @Override
-                    public void onCompleted() {
-                        mRegistrationView.showProgress(false);
-                        Log.d("REGISTRATION","DONE");
-                        Toast.makeText(mContext.getApplicationContext(), "Registration Success", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // cast to retrofit.HttpException to get the response code
-                        mRegistrationView.showProgress(false);
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException)e;
-                            int code = response.code();
-                            Toast.makeText(mContext.getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                         response -> {
+                              mRegistrationView.showProgress(false);
+                              Log.d("USER", response.toString());
+                              Toast.makeText(mContext.getApplicationContext(), "Registered User" + response.toString(), Toast.LENGTH_SHORT).show();
+                        },
+                        e -> {
+                            mRegistrationView.showProgress(false);
+                            if (e instanceof HttpException) {
+                                HttpException response = (HttpException)e;
+                                int code = response.code();
+                            }
+                        },
+                        () -> {
+                            mRegistrationView.showProgress(false);
+                            Log.d("REGISTRATION","DONE");
+                            Toast.makeText(mContext.getApplicationContext(), "Registration Success", Toast.LENGTH_LONG).show();
                         }
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        mRegistrationView.showProgress(false);
-                        Log.d("USER", user.toString());
-                        Toast.makeText(mContext.getApplicationContext(), "Registered User" + user.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                );
 
     }
 
