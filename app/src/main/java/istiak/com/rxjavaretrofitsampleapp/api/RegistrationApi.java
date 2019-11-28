@@ -1,4 +1,4 @@
-package istiak.com.rxjavaretrofitsampleapp.network;
+package istiak.com.rxjavaretrofitsampleapp.api;
 
 /**
  * Created by slbd on 6/15/17.
@@ -6,12 +6,10 @@ package istiak.com.rxjavaretrofitsampleapp.network;
 
 
 
-import dagger.Component;
 import istiak.com.rxjavaretrofitsampleapp.model.User;
+import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 
 
@@ -19,5 +17,10 @@ public interface RegistrationApi {
 
     @POST("users")
     Observable<User> doRegistration(@Body User user) ;
+
+
+    @POST("users")
+    Call<User> doReg(@Body User user) ;
+
 
 }

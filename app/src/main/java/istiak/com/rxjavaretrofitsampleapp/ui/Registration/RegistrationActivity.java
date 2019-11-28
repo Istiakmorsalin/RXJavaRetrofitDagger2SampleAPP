@@ -1,4 +1,4 @@
-package istiak.com.rxjavaretrofitsampleapp.Registration;
+package istiak.com.rxjavaretrofitsampleapp.ui.Registration;
 
 
 import android.animation.Animator;
@@ -8,12 +8,14 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
 
@@ -24,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import istiak.com.rxjavaretrofitsampleapp.R;
 import istiak.com.rxjavaretrofitsampleapp.RXJavaRetrofitSampleApp;
+import istiak.com.rxjavaretrofitsampleapp.viewmodel.RegistrationViewModel;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -32,7 +35,7 @@ import rx.functions.Func2;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegistrationActivity extends AppCompatActivity implements RegistrationView  {
+public class RegistrationActivity extends AppCompatActivity {
 
 
     private static final String[] DUMMY_CREDENTIALS = new String[]{
@@ -40,9 +43,9 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     };
 
     @Inject
-    RegistrationPresenter registrationPresenter;
-    @Inject
     Context mContext;
+
+    RegistrationViewModel registrationViewModel;
 
 
     // UI references.
@@ -72,12 +75,9 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         ((RXJavaRetrofitSampleApp) getApplication()).getComponent().inject(this);
         name = RxTextView.textChanges(mName);
         phoneNumber = RxTextView.textChanges(mPhoneNumber);
-        registrationPresenter.setupView(this);
-
         addListenerOnSpinnerItemSelection();
         combineEvent();
-
-
+        registrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel.class);
     }
 
 
@@ -86,11 +86,13 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         String email = mName.getText().toString();
         String phoneNumber = mPhoneNumber.getText().toString();
         String bloodGroup = String.valueOf(spinner.getSelectedItem()) ;
-
-            registrationPresenter.attemptRegister(email,phoneNumber,bloodGroup);
-
-
-
+        registrationViewModel.getRegistration(email,phoneNumber,bloodGroup).observe(this, response -> {
+            if(response.isSuccess()) {
+                Log.d("Test", response.toString());
+            } else {
+                Log.d("Test", "Failed");
+            }
+        });
     }
 
     public void addListenerOnSpinnerItemSelection() {
@@ -99,20 +101,18 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     public void combineEvent(){
         subscription = Observable.combineLatest(name, phoneNumber,
-                new Func2<CharSequence, CharSequence, Boolean>() {
-                    @Override public Boolean call(CharSequence name, CharSequence  phoneNumber) {
-                        //here you can validate the edit text
-                        boolean nameValid= !TextUtils.isEmpty(name);
-                        if(!nameValid){
-                            mName.setError("Please Input Name");
-                        }
-                        boolean phoneValid = !TextUtils.isEmpty(phoneNumber) && phoneNumber.length() == 11;
-                        if(!phoneValid){
-                            mPhoneNumber.setError("PhoneNumber must be of 11 Digits");
-                        }
-                        return nameValid && phoneValid;
-
+                (name, phoneNumber) -> {
+                    //here you can validate the edit text
+                    boolean nameValid= !TextUtils.isEmpty(name);
+                    if(!nameValid){
+                        mName.setError("Please Input Name");
                     }
+                    boolean phoneValid = !TextUtils.isEmpty(phoneNumber) && phoneNumber.length() == 11;
+                    if(!phoneValid){
+                        mPhoneNumber.setError("PhoneNumber must be of 11 Digits");
+                    }
+                    return nameValid && phoneValid;
+
                 }).subscribe(new Observer<Boolean>() {
             @Override public void onCompleted() {
 
