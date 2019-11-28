@@ -1,44 +1,21 @@
 package istiak.com.rxjavaretrofitsampleapp.Registration;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.text.style.SubscriptSpan;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -47,19 +24,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import istiak.com.rxjavaretrofitsampleapp.R;
 import istiak.com.rxjavaretrofitsampleapp.RXJavaRetrofitSampleApp;
-import istiak.com.rxjavaretrofitsampleapp.model.User;
-import istiak.com.rxjavaretrofitsampleapp.network.RegistrationApi;
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
-
-import static android.Manifest.permission.PACKAGE_USAGE_STATS;
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -79,12 +47,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     // UI references.
     @BindView(R.id.name) EditText mName;
-    @BindView(R.id.phoneNumber) EditText mPhoneNumber;
-    @BindView(R.id.spinner1) Spinner spinner;
+    @BindView(R.id.phoneNumber)
+    EditText mPhoneNumber;
+    @BindView(R.id.spinner1)
+    Spinner spinner;
 
-    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.login_progress)
+    View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
-    @BindView(R.id.registrationButton) Button registrationButton ;
+    @BindView(R.id.registrationButton)
+    Button registrationButton ;
 
     private Subscription subscription = null;
     Observable<CharSequence> name;
