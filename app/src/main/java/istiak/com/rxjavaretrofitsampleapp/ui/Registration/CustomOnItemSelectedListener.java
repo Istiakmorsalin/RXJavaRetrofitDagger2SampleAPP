@@ -1,4 +1,4 @@
-package istiak.com.rxjavaretrofitsampleapp.Registration;
+package istiak.com.rxjavaretrofitsampleapp.ui.Registration;
 
 /**
  * Created by slbd on 6/18/17.

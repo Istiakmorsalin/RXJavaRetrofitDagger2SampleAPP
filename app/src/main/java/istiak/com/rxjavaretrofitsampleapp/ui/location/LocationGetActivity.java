@@ -1,15 +1,11 @@
-package istiak.com.rxjavaretrofitsampleapp.location;
+package istiak.com.rxjavaretrofitsampleapp.ui.Registration.location;
 
 import android.os.Bundle;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jakewharton.rxbinding.widget.RxTextView;
-
-import butterknife.ButterKnife;
 import istiak.com.rxjavaretrofitsampleapp.R;
-import istiak.com.rxjavaretrofitsampleapp.RXJavaRetrofitSampleApp;
 
 /**
  * Created by slbd on 6/18/17.

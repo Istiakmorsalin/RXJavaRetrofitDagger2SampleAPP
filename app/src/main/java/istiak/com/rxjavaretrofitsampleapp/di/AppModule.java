@@ -1,4 +1,4 @@
-package istiak.com.rxjavaretrofitsampleapp;
+package istiak.com.rxjavaretrofitsampleapp.di;
 
 import android.app.Application;
 import android.content.Context;
