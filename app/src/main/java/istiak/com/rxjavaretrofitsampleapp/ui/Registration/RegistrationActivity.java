@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +41,6 @@ public class RegistrationActivity extends AppCompatActivity {
             "foo@example.com:hello", "bar@example.com:world"
     };
 
-    @Inject
-    Context mContext;
 
     RegistrationViewModel registrationViewModel;
 
@@ -72,12 +69,19 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         ButterKnife.bind(this);
-        ((RXJavaRetrofitSampleApp) getApplication()).getComponent().inject(this);
         name = RxTextView.textChanges(mName);
         phoneNumber = RxTextView.textChanges(mPhoneNumber);
         addListenerOnSpinnerItemSelection();
         combineEvent();
         registrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel.class);
+
+        registrationViewModel.getGithubData().observe(this, githubResponse -> {
+            if(githubResponse.getResponse() != null) {
+                Log.i("Istiak1", githubResponse.toString());
+            } else if(githubResponse.getErrorMessage() != null) {
+                Log.i("Istiak2", githubResponse.getErrorMessage());
+            }
+        });
     }
 
 

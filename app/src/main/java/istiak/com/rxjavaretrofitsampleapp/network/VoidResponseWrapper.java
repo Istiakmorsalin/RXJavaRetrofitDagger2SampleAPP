@@ -1,4 +1,4 @@
-package istiak.com.rxjavaretrofitsampleapp.di.network;
+package istiak.com.rxjavaretrofitsampleapp.network;
 
 public class VoidResponseWrapper extends ResponseWrapper {
     boolean success;

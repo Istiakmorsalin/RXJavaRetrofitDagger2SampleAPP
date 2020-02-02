@@ -1,14 +1,15 @@
 package istiak.com.rxjavaretrofitsampleapp.repository;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import istiak.com.rxjavaretrofitsampleapp.api.RegistrationApi;
-import istiak.com.rxjavaretrofitsampleapp.di.network.NetworkModule;
-import istiak.com.rxjavaretrofitsampleapp.di.network.VoidResponseWrapper;
+import java.util.List;
+
+import istiak.com.rxjavaretrofitsampleapp.api.ApiService;
+import istiak.com.rxjavaretrofitsampleapp.model.GithubResponse;
+import istiak.com.rxjavaretrofitsampleapp.network.GenericResponse;
+import istiak.com.rxjavaretrofitsampleapp.network.NetworkClient;
+import istiak.com.rxjavaretrofitsampleapp.network.VoidResponseWrapper;
 import istiak.com.rxjavaretrofitsampleapp.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,17 +18,17 @@ import retrofit2.Response;
 
 public class RegistrationRepository extends BaseRepository {
 
-    RegistrationApi registrationApi;
+    ApiService apiService;
 
     public RegistrationRepository() {
-        this.registrationApi = NetworkModule.getRegistrationApi();
+        this.apiService = NetworkClient.getApiService();
     }
 
     public LiveData<VoidResponseWrapper> attemptRegister(String email, String phoneNumber, String bloodGroup) {
         MutableLiveData<VoidResponseWrapper> data = new MutableLiveData<>();
         User user = new User(email, phoneNumber, bloodGroup);
 
-        registrationApi.doReg(user).enqueue(new Callback<User>() {
+        apiService.doReg(user).enqueue(new Callback<User>() {
 
           VoidResponseWrapper voidResponseWrapper = new VoidResponseWrapper();
           @Override
@@ -37,7 +38,6 @@ public class RegistrationRepository extends BaseRepository {
               } else {
                   voidResponseWrapper.setSuccess(false);
               }
-
           }
 
           @Override
@@ -47,5 +47,33 @@ public class RegistrationRepository extends BaseRepository {
       });
 
             return data;
+    }
+
+
+
+    public LiveData<GenericResponse<GithubResponse>> getData() {
+        MutableLiveData<GenericResponse<GithubResponse>> data = new MutableLiveData<>();
+
+        apiService.getData().enqueue(new Callback<GithubResponse>() {
+            GenericResponse<GithubResponse> githubResponse = new GenericResponse<>();
+
+            @Override
+            public void onResponse(Call<GithubResponse> call, Response<GithubResponse> response) {
+                if(response.isSuccessful())
+                  githubResponse.setResponse(response.body());
+                else
+                  githubResponse.setErrorMessage(response.message());
+
+                data.setValue(githubResponse);
+            }
+
+            @Override
+            public void onFailure(Call<GithubResponse> call, Throwable t) {
+                githubResponse.setErrorMessage(t.getMessage());
+                data.setValue(githubResponse);
+            }
+        });
+
+        return data;
     }
 }
